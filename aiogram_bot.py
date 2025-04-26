@@ -9,7 +9,7 @@ ADMIN_IDS = {7014503619}
 warns = {}
 
 # Загрузка матов
-with open(".venv/bad_words.txt", encoding="utf-8") as f:
+with open("bad_words.txt", encoding="utf-8") as f:
     bad_words = set(word.strip().lower() for word in f if word.strip())
 
 bot = Bot(token=TOKEN)
@@ -94,11 +94,10 @@ async def message_handler(message: types.Message):
     elif "!ктокто" in text:
         await message.reply(f"🤔 Это точно {user.first_name}!")
 
-# Запуск бота
-async def main():
-    await dp.start_polling(bot)
+    # Запуск бота
+    async def main():
+        await dp.start_polling(bot)
 
-if __name__ == "__main__":
-    asyncio.run(main())
-git push -u origin main
 
+    if __name__ == "__main__":
+        asyncio.run(main())
