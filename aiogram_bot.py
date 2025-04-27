@@ -9,7 +9,7 @@ from aiogram.types import ChatPermissions
 # Настройки
 TOKEN = "7809092146:AAHt5mOUHHyl2Vzt1MI1UdA8nR6fU7iG3_U"
 warns = {}
-ranks = {}  # Формат: {chat_id: {user_id: ранг}}
+ranks = {}
 RANK_PRIORITY = {
     "User": 10,
     "Модер": 30,
@@ -27,10 +27,7 @@ dp.include_router(router)
 with open("bad_words.txt", encoding="utf-8") as f:
     bad_words = set(word.strip().lower() for word in f if word.strip())
 
-# Проверка полномочий
-def can_manage(executor_rank, target_rank):
-    return RANK_PRIORITY.get(executor_rank, 0) > RANK_PRIORITY.get(target_rank, 0)
-
+# Функции рангов
 def get_rank(chat_id, user_id):
     return ranks.get(chat_id, {}).get(user_id, "User")
 
@@ -39,7 +36,10 @@ def set_rank(chat_id, user_id, rank):
         ranks[chat_id] = {}
     ranks[chat_id][user_id] = rank
 
-# Назначаем Высшего Создателя при первом сообщении
+def can_manage(executor_rank, target_rank):
+    return RANK_PRIORITY.get(executor_rank, 0) > RANK_PRIORITY.get(target_rank, 0)
+
+# Автоназначение высшего создателя
 @router.message()
 async def auto_assign(message: types.Message):
     if message.chat.type in ["group", "supergroup"]:
